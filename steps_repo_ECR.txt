@@ -1,15 +1,15 @@
 1) CREAR REPO
-aws ecr create-repository --repository-name experimental-kedro-pr --region us-east-1 --image-scanning-configuration scanOnPush=true
+aws ecr create-repository --repository-name oficial-kedro-pr --region us-east-1 --image-scanning-configuration scanOnPush=true
 
 2) Autenticación Docker ↔ ECR (Login Succeeded)
 aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 503427799533.dkr.ecr.us-east-1.amazonaws.com
 
 3) DOCKER LOCAL
-docker build -t experimental-kedro-pr .
+docker build -t oficial-kedro-pr .
 
 4) DESPLIEGUE EN AWS / Publicación de la imagen Docker en ECR (push successful)
-a) docker tag experimental-kedro-pr:latest 503427799533.dkr.ecr.us-east-1.amazonaws.com/experimental-kedro-pr:latest
-b) docker push 503427799533.dkr.ecr.us-east-1.amazonaws.com/experimental-kedro-pr:latest
+a) docker tag oficial-kedro-pr:latest 503427799533.dkr.ecr.us-east-1.amazonaws.com/oficial-kedro-pr:latest
+b) docker push 503427799533.dkr.ecr.us-east-1.amazonaws.com/oficial-kedro-pr:latest
 
 
 #################################################

@@ -1,4 +1,4 @@
-kedro==0.18.14
+kedro==0.19.12
 kedro-datasets==1.8.0
 scikit-learn==1.4.0
 pandas==2.2.2

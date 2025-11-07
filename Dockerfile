@@ -18,7 +18,7 @@ COPY requirements.txt /tmp/requirements.txt
 # Instala librerías necesarias para Kedro y ML comunes
 RUN uv pip install --system --no-cache-dir -r /tmp/requirements.txt && \
     uv pip install --system --no-cache-dir scikit-learn==1.4.0 && \
-    uv pip install --system --no-cache-dir kedro==0.18.14 && \
+    uv pip install --system --no-cache-dir kedro==0.19.12 && \
     rm -f /tmp/requirements.txt
 
 # ------------------------------------------------
