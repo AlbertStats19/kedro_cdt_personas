@@ -250,7 +250,7 @@ multidict==6.7.0
     #   aiobotocore
     #   aiohttp
     #   yarl
-numpy==2.3.4
+numpy==1.26.4
     # via
     #   bigframes
     #   contourpy
