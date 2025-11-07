@@ -973,41 +973,124 @@ def dividir_texto(texto, max_chars=80):
     return lineas
 
 ## Pipeline de generacion de reporte
+## Pipeline de generacion de reporte
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
+from reportlab.lib import colors
+from reportlab.platypus import Table, TableStyle
+import os, boto3, pandas as pd
+
 def generar_reporte_pdf(pdf_info, params):
     estructura_pdf = params['estructura_pdf']
     ruta_base_s3 = estructura_pdf['ruta_monitoreo']
     nombre_pdf = estructura_pdf['nombre_pdf']
 
-    # === Ruta temporal local donde el contenedor puede escribir ===
-    ruta_local_tmp = "/opt/ml/processing/output/monitoring"
+    # === Ruta temporal local permitida ===
+    ruta_local_tmp = "/tmp/monitoring"
     os.makedirs(ruta_local_tmp, exist_ok=True)
 
     pdf_path_local = os.path.join(ruta_local_tmp, nombre_pdf)
     c = canvas.Canvas(pdf_path_local, pagesize=A4)
+    width, height = A4
 
-    # ... 👈 (mantén todo el contenido original de la función, solo cambia el destino de guardado)
+    # === Parámetros del formato ===
+    start_text_cm = estructura_pdf['start_text_cm']
+    margen_sup_inf_cm = estructura_pdf['margen_sup_inf_cm']
+    renglon_cm = estructura_pdf['renglon_cm']
+    margen_izq_cm = estructura_pdf['margen_izq_cm']
+    y_graph_cm = estructura_pdf['y_graph_cm']
+    width_graph_cm = estructura_pdf['width_graph_cm']
+    height_graph_cm = estructura_pdf['height_graph_cm']
+    margen_izq_graph_cm = estructura_pdf['margen_izq_graph_cm']
 
-    # Guardar el PDF
+    # Conversión a puntos (cm → puntos PDF)
+    from reportlab.lib.units import cm
+    start_text = start_text_cm * cm
+    margen_inferior = margen_sup_inf_cm * cm
+    margen_superior = margen_sup_inf_cm * cm
+    renglon = renglon_cm * cm
+    margen_izq = margen_izq_cm * cm
+    y_graph = y_graph_cm * cm
+    margen_izq_graph = margen_izq_graph_cm * cm
+    width_graph = width_graph_cm * cm
+    height_graph = height_graph_cm * cm
+
+    style = TableStyle([
+        ('BACKGROUND', (0,0), (-1,0), colors.red),
+        ('TEXTCOLOR', (0,0), (-1,0), colors.whitesmoke),
+        ('GRID', (0,0), (-1,-1), 1, colors.black),
+        ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
+        ('ALIGN', (0,0), (-1,-1), 'CENTER'),
+    ])
+
+    # === Generar PDF con texto y tablas ===
+    for i in list(pdf_info.keys()):
+        if i != 'parte':
+            y = start_text
+            c.setFont("Helvetica-Bold", 14)
+            c.drawString(margen_izq, y, "INFORME DE METRICAS")
+            y -= renglon
+            c.setFont("Helvetica", 13)
+            c.drawString(margen_izq, y, f"{i.upper()}")
+            y = start_text - margen_superior
+
+            texto = pdf_info[i]['msj']
+            tickets_df = pdf_info[i]['tickets_df']
+
+            for t, text in enumerate(texto, start=1):
+                if isinstance(text, str):
+                    for linea in text.split("\n"):
+                        c.setFont("Helvetica", 11)
+                        c.drawString(margen_izq, y, linea[:120])
+                        y -= renglon
+                        if y <= margen_inferior:
+                            c.showPage()
+                            y = start_text - margen_superior
+                elif isinstance(text, pd.DataFrame):
+                    y -= renglon
+                    text = text.round(2).reset_index()
+                    data = [text.columns.to_list()] + text.values.tolist()
+                    table = Table(data)
+                    table.setStyle(style)
+                    table.wrapOn(c, width - 2*margen_izq, height)
+                    table_height = table._height
+                    if y - table_height <= margen_inferior:
+                        c.showPage()
+                        y = start_text - margen_superior
+                    table.drawOn(c, margen_izq, y - table_height)
+                    y -= table_height + renglon
+
+            c.showPage()
+
+            figuras = pdf_info[i]['figuras']
+            for t, figura in enumerate(figuras, start=1):
+                ruta_img_local = os.path.join(ruta_local_tmp, f"imagen_{i.replace(' ', '_')}{t}.png")
+                figura.savefig(ruta_img_local)
+                c.drawImage(ruta_img_local, margen_izq_graph, y_graph,
+                            width=width_graph, height=height_graph,
+                            preserveAspectRatio=True)
+                c.showPage()
+
+    # Guardar el PDF localmente
     c.save()
     print(f"✅ PDF local generado: {pdf_path_local}")
 
-    # === Subir al bucket S3 destino ===
+    # === Subir a S3 ===
     s3 = boto3.client("s3")
     bucket_name = ruta_base_s3.split("/")[2]
     prefix = "/".join(ruta_base_s3.split("/")[3:])
 
-    # Subir el PDF
+    # Subir PDF
     s3.upload_file(pdf_path_local, bucket_name, f"{prefix}/{nombre_pdf}")
     print(f"📤 PDF subido a S3: s3://{bucket_name}/{prefix}/{nombre_pdf}")
 
-    # Subir todas las imágenes generadas
+    # Subir imágenes
     for i in list(pdf_info.keys()):
         if i != "parte":
             figuras = pdf_info[i]['figuras']
             for t, figura in enumerate(figuras, start=1):
                 filename = f"imagen_{i.replace(' ', '_')}{t}.png"
                 img_local_path = os.path.join(ruta_local_tmp, filename)
-                figura.savefig(img_local_path)
                 s3.upload_file(img_local_path, bucket_name, f"{prefix}/{filename}")
                 print(f"📤 Imagen subida a S3: s3://{bucket_name}/{prefix}/{filename}")
 
