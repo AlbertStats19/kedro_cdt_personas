@@ -1,0 +1,193 @@
+######################################################
+##### Parameters modelo_360
+######################################################
+
+######################
+###### VARIABLES EXTRAS AL MODELO
+
+# smmlv: salario minimo
+# mes_input: mes insumo con el que se hizo cada pronostico para añadir las variables anexas al pronostico
+# mes_vig: mes de vigencia del pronostico
+######################
+
+smmlv: 1423500
+mes_input: 's3://data-bbog-dev-refined/estandarizado/feature-store/599-persona-natural/feature-store_599-persona-natural_master-table-599_cds_m202502/'
+mes_vig: 202405
+
+######################
+##### MANEJO DE PREDICCIONES
+
+# desear_todos_id_x_archivo: metodo de consolidacion de pronosticos
+        # si se coloca True monta el archivo con todos los IDs de cada archivo
+        # si se coloca False monta el archivo con otodos los IDs donde y_pred = 1
+
+# reprocesar_probs_norm: ordenamiento en funcion de probabilidades estandarizadas o no
+    # Si es True entonces el metodo_estandarizar_probs toma peso
+# multiplicar_recall_max_probs: sobre la variable que se usara para generar el ordenamiento (prob/prob. estandarizada) se le mulplitica el recall maximo.
+        # De modo que las probabilidades estaran ordenando el producto segun la velocidad del modelo para detectar aciertos.
+        # Esto tendra impactos solamente en la fase del ordenamiento donde los productos esten en el mismo nivel de propension.
+# priorizar_modelo: Factor multiplicador sobre las probabilidades que se usaran para generar el ordenamiento de modo que se busca priorizar un producto sobre el resto.
+######################
+
+desear_todos_id_x_archivo: True
+reprocesar_probs_norm: True
+metodo_estandarizar_probs: 'Min-Max' #'Min-Max', 'Z-Score'
+multiplicar_recall_probs: True
+priorizar_modelo: { # revisar esto porque si se x>1 entonces los altos se vuelven mas altos y los pequeños mas pequeños (Reprocesar sin estandarizar los datos o incorporar min/max)
+    CDT: 1,
+    CS: 1,
+    LD: 1,
+    VIV: 1,
+    libranza: 1,
+    SP: 1,
+    TC: 1,
+    FID: 1,
+    VEH: 1,
+    CC: 1,
+    AH: 1,
+    }
+######################
+##### UBICACION DE PREDICCIONES Y PRODUCTOS INCORPORADOS
+
+# ruta = f"{ruta_base}/{producto}/{archivo_nombre}"
+    # productos_carpeta:
+        # Se hace un loop y cada iteracion es producto:
+            # productos incorporados en el modelo 360.
+            # Nombre asociado a la carpeta donde esta el pronostico.
+######################
+
+ruta_base: "s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas"
+productos_carpeta: ["CDT","CS","LD",'VIV','libranza',"SP","TC","FID","VEH","CC",'AH']
+archivo_nombre: '08-model_output/base_calificada_nueva_202503.parquet'
+
+######################
+##### DEPENDENCIA Y UBICACION DEL BACKTESTING FRENTE AL MODELO 360
+
+# ruta = f"{ruta_base}/{producto}/{pickle_backtest}"
+    #pickle_backtest_all:
+        # pickle_backtest esta asociado al producto de productos_carpeta
+
+# rezagos_predict: Corresponde al retraso de informacion que se tiene entre los insumos realizados para predecir y la fecha de uso del modelo.
+
+# refactor_backtesting: Determina como se manejara la categorizacion y la priorizacion de los modelos (Muy Alto, Alto, etc...)
+                # Si la categorizacion del modelo se realiza netamente por backtesting entonces se usara 'nivel_modelo' =True
+                # Por otro lado:
+                    # si tiene un trade-off efectividad/plata y quiere disminuir efectividad para atraer plata entonces: 
+                                # 'decil_monto_efect_etiqueta': coloque el numero asociada a la etiqueta  
+                                # 'alcance_decil_monto_efect': coloque el decil hasta donde llegara la etiqueta de 'decil_monto_efect_etiqueta'
+                    # tipo_decil_backtesting: 
+                                # Si su modelo tiene buen ordenamiento entonces es relavente usar 'Decil Categoria'.
+                                #'Por el contrario, debe ejecutar el 'Decil Pend' y backtestearlo. 
+                                            # si no tiene buen resultado entonces intente con el 'Decil Categoria' y comparelo.
+
+# homolog_decil_etiquetas: Representa la homologacion de categorizacion asociada a 'decil_monto_efect_etiqueta'
+
+######################
+pickle_backtest_all: {
+    CDT: '09-backtesting/insumo_modelo_360_new_mvp7_4_202412.pickle',
+    CS: '09-backtesting/insumo_modelo_360_new_t3_202411.pickle',
+    LD: '09-backtesting/insumo_modelo_360_new_t3_202411_v2_0.pickle', # insumo_modelo_360_new_t3_202410_v2_0.pickle
+    VIV: '09-backtesting/insumo_modelo_360_sin_eda_t3_202412.pickle', # insumo_modelo_360_sin_eda_t3_202411.pickle
+    libranza: '09-backtesting/insumo_modelo_360_new_t3_v2_0_202411.pickle',
+    SP: '09-backtesting/insumo_modelo_360_new_t3_202411.pickle',
+    TC: '09-backtesting/insumo_modelo_360_new_t3_v3_1_202412.pickle', # insumo_modelo_360_new_t3_v3_1_202411.pickle
+    FID: '09-backtesting/insumo_modelo_360_v1_202502.pickle',
+    VEH: '09-backtesting/insumo_modelo_360_202412_anterior_mvp8.pickle',
+    CC: '09-backtesting/insumo_modelo_360_t3_mvp7_202411.pickle',
+    AH: '09-backtesting/insumo_modelo_360_ensamble_mvp7_202411.pickle'
+}
+
+rezagos_predict: {
+    CDT: 2,
+    CS: 2,
+    LD: 2,
+    VIV: 2,
+    libranza: 2,
+    SP: 2,
+    TC: 2,
+    FID: 2,
+    VEH: 2,
+    CC: 2,
+    AH: 2,
+}
+
+refactor_backtesting: {
+    nivel_modelo: False, # si es True el resto de parametros no importan
+    tipo_decil_backtesting: 'Decil Categoria', #'Decil Pend','Decil Categoria'
+    decil_monto_efect_etiqueta: 8, # el decil 10 y 9 quedan por modelo y el decil 8 arranca por modelo y lleva hasta el alcance_decil_monto_efect determinado
+    alcance_decil_monto_efect: {
+        CDT: 0.2, #
+        CS: 0.2,
+        LD: 0.3,
+        VIV: 0.2,
+        libranza: 0.2,
+        SP: 0.3, # a veces 0.2
+        TC: 0.3,
+        FID: 0.2, 
+        VEH: 0.2,
+        CC: 0.3,
+        AH: 0.3,
+    }
+}
+
+# adaptacion a MLOPs y Model_Output
+vinculacion_productos: {
+    ah_cant_aper_mes: 'AH',
+    cc_cant_aper_mes: 'CC',
+    cdt_cant_aper_mes: 'CDT',
+    cs_cant_aper_mes: 'CS',
+    fid_cant_aper_mes: 'FID',
+    ld_cant_aper_mes: 'LD',
+    lib_cant_aper_mes: 'libranza',
+    sus_cant_aper_mes: 'SP',
+    tc_cant_aper_mes: 'TC',
+    viv_cant_aper_mes: 'VIV',
+    veh_cant_aper_mes: 'VEH'
+    }
+    
+homolog_decil_etiquetas: { # etiquetas asociadas al insumo del backtesting
+    1: "Muy Bajo",
+    2: "Muy Bajo",
+    3: "Bajo",
+    4: "Bajo",
+    5: "Medio Bajo",
+    6: "Medio Bajo",
+    7: "Medio",
+    8: "Medio Alto",
+    9: "Alto",
+    10: "Muy Alto"
+}
+
+######################
+##### UBICACION DEl MODELO 360 GENERADO
+######################
+#ruta_save: 's3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/modelo_360/campana_full_202501.parquet'
+ruta_save: 's3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/modelo_360/campana_full_202503_v2.parquet'
+
+######################
+##### MANEJO DE MODELO SEGUN LA FORMA COMO SE CONTACTA EL CLIENTE Y SE OFRECE
+
+# Existe un modelo unico que tiene como funcionalidad ofertar dos cosas diferentes
+    # libranza y retanqueo es un solo modelo
+    # y se define como oferta de libranza u oferta de retanqueo si tiene un producto de libranza vigenete o no.
+    # para el modelo libranza, se buscaran las cantidades de libranzas que tiene segun la variable 'lib_cant'
+
+# formato de homologacion_360:
+    # homologacion_360: { 
+    #            producto: variable asociada a las cantidades que ya tiene el cliente en ese producto (Asociado a variables_insumo_homologar),
+    #            producto+'>0':Etiqueta del nombre de la oferta cuando las cantidades vigentes son >0
+    #}
+    # producto debe cuadrar con la lista de productos_carpeta
+
+# variables_insumo_homologar:
+    # lista de variables requeridas para separar un modelo en 2 ofertas.
+######################
+
+homologacion_360: {
+    'libranza': 'lib_cant', # producto: Cantidad de libranzas vigentes=lib_cant
+    # si las cantidades son > 0 se define un RETANQUEO en vez de libranza
+    'libranza>0': 'RETANQUEO' #producto+'>0': etiqueta o nombre de la oferta en ese producto
+          }
+
+variables_insumo_homologar: 
+    - lib_cant  # Asociado a la linea 173 de los parametros

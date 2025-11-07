@@ -1,0 +1,54 @@
+# This is a boilerplate parameters config generated for pipeline 'model_output'
+# using Kedro 0.18.14.
+#
+# Documentation for this file format can be found in "Parameters"
+# Link: https://docs.kedro.org/en/0.18.14/configuration/parameters.html
+
+# corte del mes input
+dataset_name: "${previous_month:'${_fecha_ejecucion}'}" # corte de la data input
+
+_fecha_ejecucion: "${format_execution_date: ${runtime_params:fecha_ejecucion}}"
+
+# metodo de pronosticos
+threshold: {
+    umbral: 0.5,
+    dinamic: True,
+    class_dinamic: 'ks_test' #,'ks_train'
+}
+# parametro aplicable a model_output y backtesting
+        # recuerde que por default cuando la prob = 0 entonces y_pred = 0
+        # luego si se coloca True:
+                        # toda la base de datos estara filtrada por los probs >0
+                        # y tambien filtrara hasta params['n_obs_filter'] observaciones
+        # si coloca false se calificara toda la base y:
+                        # se tendran a lo maximo params['n_obs_filter'] con y_pred=1. A lo maximo porque si y_probs = 0 entonces y_pred = 0
+                        
+filtrar_y_prob_mayor_0: False
+
+# parametro solo aplicable a solamente model_ouput
+adjust_y_pred:
+    # ajustar la probabilidad
+    want: True
+    
+# agregar las variables anexas a la base de pronosticos:
+add_anexos: True
+
+# ajuste de los filtros de segmento para predecir. Son filtros de intermediate condicionados o filtros acumulados
+re_ajuste_filtros:
+    want: False
+    filter_segment:
+        1er_condicion:
+            column: segmento_cliente
+            value: _masivo, _preferente, _premium # debe ir separado de una , y un espacio: ', '
+#       2da_condicion:
+#           column: segmento_cliente
+#           value: _preferente # puede solo un string
+
+# ajuste de los filtros de negocio para predecir. Son filtros de primary condicionados o filtros acumulados
+re_ajuste_filtros_negocio:
+    want: False
+    filter_business:
+        edad_anios:
+            - 18
+            - 70
+        #ratio_deuda_ingresos: ">0"

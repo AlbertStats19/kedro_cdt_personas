@@ -1,0 +1,77 @@
+# This is a boilerplate parameters config generated for pipeline 'backtesting'
+# using Kedro 0.18.14.
+#
+# Documentation for this file format can be found in "Parameters"
+# Link: https://docs.kedro.org/en/0.18.14/configuration/parameters.html
+
+# rezago predictivo, corte de la base, ruta de la base
+rutas_inputs: [[1,'202504','s3://data-bbog-dev-refined/estandarizado/feature-store/599-persona-natural/feature-store_599-persona-natural_master-table-599_cds_m202504/'], 
+               [2,'202503','s3://data-bbog-dev-refined/estandarizado/feature-store/599-persona-natural/feature-store_599-persona-natural_master-table-599_cds_m202503/'],
+               [3,'202502','s3://data-bbog-dev-refined/estandarizado/feature-store/599-persona-natural/feature-store_599-persona-natural_master-table-599_cds_m202502/']]
+
+# cambio a ejecucion a modo de monitoreo
+monitoreo: 
+    want: True   # t de rezago, corte input calificado, base calificada en la fecha de ejecucion 
+    rutas_inputs:  [[1,'202504','s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/${runtime_params:product}/08-model_output/base_calificada_nueva_202505.parquet'], #${_fecha_ejecucion}
+                    [2,'202503','s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/${runtime_params:product}/08-model_output/base_calificada_nueva_202504.parquet'], #${previous_month:'${runtime_params:fecha_ejecucion}'
+                    [3,'202502','s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/${runtime_params:product}/08-model_output/base_calificada_nueva_202503.parquet']
+                   ]
+
+
+# ruta de resultados reales (Origen Real del Dataset)
+ruta_output: 
+    metodo: bigframes # bigframes, s3
+    s3: 's3://data-bbog-dev-sandbox-entity/casos-uso/recuperacion-clientes/retail/202505/data_pd_read_parquet.parquet' # ${_fecha_ejecucion}$/
+    bigframes: 
+        project: "augusta-bbog-pro-activo"
+        read_gbq: "augusta-bbog-pro-activo.transit_input.FEAUTURE_RETAIL"
+        # filtramos las observaciones
+        filter_value: 
+            params:
+                period_col:
+                    - 20505 #${_fecha_ejecucion}
+            add_vars: 'None'
+                #periodo: 
+                #    - ${_fecha_ejecucion}$ #202505
+        # filtramos las columnas requeridas
+        filter_column:
+            params:
+                - id
+                - variable_apertura
+            add_vars:  'None'
+                #- hashvalue1
+                #- cdt_cant_aper_mes
+    
+x_dim_plot: 1000
+# parametro que sustituye params['n_obs_filters'] hasta calcular la curva de backtesting
+n_obs_backtesting: 'all' #'all',float, si no es esto usara el params['n_obs_filters']
+# cortes para visualizar la curva del backtesting
+n_tops: [10000,25000, 40000, 60000, 80000, 100000, 120000, 140000, 160000, 180000, 200000, 220000, 0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0]
+
+# ajuste de los filtros para predecir. Son filtros de intermediate condicionados o filtros acumulados
+re_ajuste_filtros_backtesting:
+    want: False
+    filter_segment:
+        1er_condicion:
+            column: segmento_cliente
+            value: _masivo, _preferente, _premium # debe ir separado de una , y un espacio: ', '
+#       2da_condicion:
+#           column: segmento_cliente
+#           value: _preferente  # puede solo un string
+
+# ajuste de los filtros de negocio para predecir. Son filtros de primary condicionados o filtros acumulados
+re_ajuste_filtros_negocio_backtesting:
+    want: False
+    filter_business:
+        edad_anios:
+            - 18
+            - 70
+        #ratio_deuda_ingresos: ">0"
+
+# La variable objetivo es un numero de aperturas entonces se coloca True transforma la variable para analizar si aperturo o no
+adj_real_target: True
+
+# parametros asociados a los insumos del modelo 360
+column_pend: '% Aciertos' #% Aciertos,Aciertos, % Aciertos x Cliente.
+tipo: "Freq Producto" # 'ID', 'Freq Producto'
+n_mult: 1000 # magnitud en que la pendiente se ve afectada: pendiente = df[column_pend].diff() / (df['N'].diff()/n_mult)

@@ -1,0 +1,17 @@
+# generar el requirements.txt y colocar las versiones correspondientes a las librerias dependientes (No todas)
+name: mlops_backtesting
+channels:
+    - conda-forge
+    - defaults
+dependencies: 
+    #- python=3.9.19
+    - pandas=2.2.3
+    - numpy=1.26.4
+    - polars=1.29.0
+    - pyarrow=20.0.0
+    - imbalanced-learn=0.13.0
+    - xgboost=2.0.3
+    - s3fs=2025.3.2
+    - jupyter=1.0.0
+    - ipykernel=6.29.0
+    - kedro=0.19.12

@@ -1,0 +1,16 @@
+# generar el requirements.txt y colocar las versiones correspondientes a las librerias dependientes (No todas)
+name: .env
+channels:
+    - conda-forge
+    - defaults
+dependencies: 
+    - pandas=2.2.3
+    - numpy=1.26.4
+    - polars=1.26.0
+    - scikit-learn=1.4.0
+    - pyarrow=18.1
+    - imbalanced-learn=0.13.0
+    - xgboost=2.0.3
+    - s3fs=2024.10.0
+    - kedro=0.19.12
+    - kedro-datasets=6.0.0

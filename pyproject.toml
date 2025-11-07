@@ -1,0 +1,20 @@
+[tool.kedro]
+package_name = "data_bbog_integration_fabrica_personas"
+project_name = "data-bbog-integration-fabrica-personas"
+kedro_init_version = "0.19.12"
+
+[tool.isort]
+profile = "black"
+
+[tool.pytest.ini_options]
+addopts = """
+--cov-report term-missing \
+--cov src/data_bbog_integration_fabrica_personas -ra"""
+
+[tool.coverage.report]
+fail_under = 0
+show_missing = true
+exclude_lines = ["pragma: no cover", "raise NotImplementedError"]
+
+[tool.kedro_telemetry]
+project_id = "9c2e76e9bbfb45ec8729a2f1675fe522"

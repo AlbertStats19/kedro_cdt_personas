@@ -1,0 +1,409 @@
+## Data Catalog para CS
+
+#Mes 1
+master_ago2023:
+  # type: pandas.ParquetDataSet
+  type: data_bbog_integration_fabrica_personas.custom_datasets.PolarsDataSet
+  filepath:  s3://data-bbog-dev-sandbox-entity/casos-uso/feat_599/landing/prueba/feature_personas_m202308.parquet
+  load_args:
+    engine: pyarrow
+  layer: raw
+
+#Mes 2
+master_sep2023:
+  # type: pandas.ParquetDataSet
+  type: data_bbog_integration_fabrica_personas.custom_datasets.PolarsDataSet
+  filepath:  s3://data-bbog-dev-sandbox-entity/casos-uso/feat_599/landing/prueba/feature_personas_m202309.parquet
+  load_args:
+    engine: pyarrow
+  layer: raw
+
+#Mes 3
+master_oct2023:
+  # type: pandas.ParquetDataSet
+  type: data_bbog_integration_fabrica_personas.custom_datasets.PolarsDataSet
+  filepath:  s3://data-bbog-dev-sandbox-entity/casos-uso/feat_599/landing/prueba/feature_personas_m202310.parquet
+  load_args:
+    engine: pyarrow
+  layer: raw
+
+#Mes 4
+master_nov2023:
+  # type: pandas.ParquetDataSet
+  type: data_bbog_integration_fabrica_personas.custom_datasets.PolarsDataSet
+  filepath:  s3://data-bbog-dev-sandbox-entity/casos-uso/feat_599/landing/prueba/feature_personas_m202311.parquet
+  load_args:
+    engine: pyarrow
+  layer: raw
+
+#Mes 5
+master_dic2023:
+  # type: pandas.ParquetDataSet
+  type: data_bbog_integration_fabrica_personas.custom_datasets.PolarsDataSet
+  filepath:  s3://data-bbog-dev-sandbox-entity/casos-uso/feat_599/landing/prueba/feature_personas_m202312.parquet
+  load_args:
+    engine: pyarrow
+  layer: raw
+
+#Mes 6
+master_ene2024:
+  # type: pandas.ParquetDataSet
+  type: data_bbog_integration_fabrica_personas.custom_datasets.PolarsDataSet
+  filepath:  s3://data-bbog-dev-sandbox-entity/casos-uso/feat_599/landing/prueba/feature_personas_m202401.parquet
+  load_args:
+    engine: pyarrow
+  layer: raw
+
+#Mes 7
+master_feb2024:
+  # type: pandas.ParquetDataSet
+  type: data_bbog_integration_fabrica_personas.custom_datasets.PolarsDataSet
+  filepath:  s3://data-bbog-dev-sandbox-entity/casos-uso/feat_599/landing/prueba/feature_personas_m202402.parquet
+  load_args:
+    engine: pyarrow
+  layer: raw
+
+#Mes 8
+master_mar2024:
+  type: pandas.ParquetDataSet
+  # type: data_bbog_integration_fabrica_personas.custom_datasets.PolarsDataSet
+  filepath:  s3://data-bbog-dev-sandbox-entity/casos-uso/feat_599/landing/prueba/feature_personas_m202403.parquet
+  load_args:
+    engine: pyarrow
+  layer: raw
+
+#Mes 9
+master_abril2024:
+  type: pandas.ParquetDataSet
+  # type: data_bbog_integration_fabrica_personas.custom_datasets.PolarsDataSet
+  filepath:  s3://data-bbog-dev-sandbox-entity/casos-uso/feat_599/landing/prueba/feature_personas_m202404.parquet
+  load_args:
+    engine: pyarrow
+  layer: raw
+
+#Mes 10
+master_mayo2024:
+  type: pandas.ParquetDataSet
+  # type: data_bbog_integration_fabrica_personas.custom_datasets.PolarsDataSet
+  filepath:  s3://data-bbog-dev-sandbox-entity/casos-uso/feat_599/landing/prueba/feature_personas_m202405.parquet
+  load_args:
+    engine: pyarrow
+  layer: raw
+
+#Mes 11
+master_junio2024:
+  type: pandas.ParquetDataSet
+  # type: data_bbog_integration_fabrica_personas.custom_datasets.PolarsDataSet
+  filepath:  s3://data-bbog-dev-sandbox-entity/casos-uso/feat_599/landing/prueba/feature_personas_m202406.parquet
+  load_args:
+    engine: pyarrow
+  layer: raw
+
+#Mes 12
+master_julio2024:
+  type: pandas.ParquetDataSet
+  # type: data_bbog_integration_fabrica_personas.custom_datasets.PolarsDataSet
+  filepath:  s3://data-bbog-dev-sandbox-entity/casos-uso/feat_599/landing/prueba/feature_personas_m202407.parquet
+  load_args:
+    engine: pyarrow
+  layer: raw
+
+#Mes 13
+master_agosto2024:
+  type: pandas.ParquetDataSet
+  # type: data_bbog_integration_fabrica_personas.custom_datasets.PolarsDataSet
+  filepath:  s3://data-bbog-dev-sandbox-entity/casos-uso/feat_599/landing/prueba/feature_personas_m202408.parquet
+  load_args:
+    engine: pyarrow
+  layer: raw
+
+#Mes 14
+master_septiembre2024:
+  type: pandas.ParquetDataSet
+  # type: data_bbog_integration_fabrica_personas.custom_datasets.PolarsDataSet
+  filepath:  s3://data-bbog-dev-sandbox-entity/casos-uso/feat_599/landing/prueba/feature_personas_m202409.parquet
+  load_args:
+    engine: pyarrow
+  layer: raw
+
+#Mes 15
+master_octubre2024:
+  type: pandas.ParquetDataSet
+  # type: data_bbog_integration_fabrica_personas.custom_datasets.PolarsDataSet
+  filepath:  s3://data-bbog-dev-sandbox-entity/casos-uso/feat_599/landing/prueba/feature_personas_m202410.parquet
+  load_args:
+    engine: pyarrow
+  layer: raw
+
+#Mes 16
+master_noviembre2024:
+  type: pandas.ParquetDataSet
+  # type: data_bbog_integration_fabrica_personas.custom_datasets.PolarsDataSet
+  filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/feat_599/landing/prueba/feature_personas_m202411.parquet
+  load_args:
+    engine: pyarrow
+  layer: raw
+
+#Mes 17
+master_diciembre2024:
+  type: pandas.ParquetDataSet
+  # type: data_bbog_integration_fabrica_personas.custom_datasets.PolarsDataSet
+  filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/feat_599/landing/prueba/feature_personas_m202412.parquet
+  load_args:
+    engine: pyarrow
+  layer: raw
+  
+#--------CAPA Pre-RAW
+master_concat_fp:
+  type: pandas.ParquetDataSet
+  filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/AH/01-raw/master_concat_fp_new.parquet
+  layer: raw
+
+#--------CAPA RAW
+master_minusculas: # por si se muere el proceso de ejecucion
+  type: pandas.ParquetDataSet
+  filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/AH/01-raw/master_raw_fp_temp_new.parquet
+  layer: raw
+
+master_standard: # por si se muere el proceso de ejecucion
+  type: pandas.ParquetDataSet
+  filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/AH/01-raw/master_raw_fp_temp_new.parquet
+  layer: raw
+
+master_null:  # por si se muere el proceso de ejecucion
+  type: pandas.ParquetDataSet
+  filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/AH/01-raw/master_raw_fp_temp_new.parquet
+  layer: raw
+
+master_change_dtypes: # por si se muere el proceso de ejecucion
+  type: pandas.ParquetDataSet
+  filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/AH/01-raw/master_raw_fp_temp_new.parquet
+  layer: raw
+
+master_validate_unique_fp: # por si se muere el proceso de ejecucion
+  type: pandas.ParquetDataSet
+  filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/AH/01-raw/master_raw_fp_temp_new.parquet
+  layer: raw
+  
+master_raw_fp: # produccion
+  type: pandas.ParquetDataSet
+  filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/AH/01-raw/master_raw_fp_new_t3.parquet
+  layer: raw
+
+#--------CAPA INTERMEDIATE (Ejecucion ppr producto desde aca)
+
+master_intermediate_fp:
+  type: pandas.ParquetDataSet
+  filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/CS/02-intermediate/master_intermediate_fp_new_t3.parquet
+  layer: intermediate
+
+#--------CAPA PRIMARY
+
+master_primary_fp:  # produccion
+  type: pandas.ParquetDataSet
+  filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/CS/03-primary/master_primary_fp_new_t3.parquet 
+  layer: primary
+
+#--------CAPA FEATURE
+feature_df:
+  type: pandas.ParquetDataSet
+  filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/CS/04-feature/master_process_importance_fp_new_t3.parquet
+  layer: feature
+
+homologate_region_model:  # produccion
+    type: kedro.extras.datasets.pickle.PickleDataSet
+    filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/CS/04-feature/homologate_region_model.pickle
+    layer: feature
+
+feature_preprocesado_df:
+  type: pandas.ParquetDataSet
+  filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/CS/04-feature/feature_preprocesado_df_new_t3.parquet
+  layer: feature
+  
+importance_df:
+  type: pandas.ParquetDataSet
+  filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/CS/04-feature/lista_importance_df_new_t3.parquet
+  layer: feature
+  
+feature_selected_list: # produccion
+  type: pandas.ParquetDataSet                      
+  filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/CS/04-feature/feature_selected_list_new_t3.parquet
+  layer: feature
+
+master_feature_fp:
+  type: pandas.ParquetDataSet
+  filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/CS/04-feature/master_feature_fp_new_t3.parquet
+  layer: feature
+
+# ------CAPA MODEL_INPUT
+# data sin procesar con las variables para entrenan
+Y_train_feature:
+  type: pandas.ParquetDataSet
+  filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/CS/05-model_input/Y_train_feature_new_t3.parquet
+  layer: model_input
+
+X_train_feature:
+  type: pandas.ParquetDataSet
+  filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/CS/05-model_input/X_train_feature_new_t3.parquet 
+  layer: model_input
+
+# data sin procesar con las variables para testear
+X_test_feature:
+  type: pandas.ParquetDataSet
+  filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/CS/05-model_input/X_test_feature_new_t3.parquet 
+  layer: model_input
+
+Y_test_feature:
+  type: pandas.ParquetDataSet
+  filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/CS/05-model_input/Y_test_feature_new_t3.parquet 
+  layer: model_input
+
+# Objeto estandarizado para entrenar los modelos
+X_train_scaler_master:
+  type: pandas.ParquetDataSet
+  filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/CS/05-model_input/X_train_scaler_master_new_t3.parquet 
+  layer: model_input
+
+scaler_transform:
+  type: kedro.extras.datasets.pickle.PickleDataSet
+  filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/CS/05-model_input/scaler_transform_new_t3.pickle
+  layer: model_input
+  
+# ------CAPA MODELS:
+##### temporal
+info_save:
+    type: kedro.extras.datasets.pickle.PickleDataSet
+    filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/CS/06-models/info_save_temp.pickle
+    layer: models
+
+info_save1:
+    type: kedro.extras.datasets.pickle.PickleDataSet
+    filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/CS/06-models/info_save_temp.pickle  
+    layer: models
+
+info_save2:
+    type: kedro.extras.datasets.pickle.PickleDataSet
+    filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/CS/06-models/info_save_temp.pickle  
+    layer: models
+
+info_save3:
+    type: kedro.extras.datasets.pickle.PickleDataSet
+    filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/CS/06-models/info_save_temp.pickle  
+    layer: models
+
+info_save4:
+    type: kedro.extras.datasets.pickle.PickleDataSet
+    filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/CS/06-models/info_save_temp.pickle  
+    layer: models
+
+info_save5:
+    type: kedro.extras.datasets.pickle.PickleDataSet
+    filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/CS/06-models/info_save_temp.pickle  
+    layer: models
+
+info_save6:
+    type: kedro.extras.datasets.pickle.PickleDataSet
+    filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/CS/06-models/info_save_temp.pickle  
+    layer: models
+
+info_save7:
+    type: kedro.extras.datasets.pickle.PickleDataSet
+    filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/CS/06-models/info_save_temp.pickle  
+    layer: models
+
+info_save8:
+    type: kedro.extras.datasets.pickle.PickleDataSet
+    filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/CS/06-models/info_save_temp.pickle  
+    layer: models
+
+info_save9:
+    type: kedro.extras.datasets.pickle.PickleDataSet
+    filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/CS/06-models/info_save_temp.pickle  
+    layer: models
+
+info_save10:
+    type: kedro.extras.datasets.pickle.PickleDataSet
+    filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/CS/06-models/info_save_temp.pickle  
+    layer: models
+
+info_save11:
+    type: kedro.extras.datasets.pickle.PickleDataSet
+    filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/CS/06-models/info_save_temp.pickle  
+    layer: models
+
+info_save12:
+    type: kedro.extras.datasets.pickle.PickleDataSet
+    filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/CS/06-models/info_save_temp.pickle  
+    layer: models
+
+info_save_all: 
+    type: kedro.extras.datasets.pickle.PickleDataSet
+    filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/CS/06-models/info_save_all_new_t3.pickle
+    layer: models
+
+# ------CAPA MODEL SELECTION:
+info_save_select: # modelo produccion
+    type: kedro.extras.datasets.pickle.PickleDataSet
+    filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/CS/07-model_selection/info_save_select_new_t3.pickle
+    layer: model_selection
+
+# ------ BACKTESTING
+### Recuerde actualizar el conjunto de :homologate_region_model,feature_selected_list,info_save_select
+# predicciones y procesamiento de datos
+data_process:
+    type: kedro.extras.datasets.pickle.PickleDataSet
+    filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/CS/09-backtesting/save_backtesting_temp.pickle
+    layer: backtesting
+
+# combinacion de predicciones
+data_process1:
+    type: kedro.extras.datasets.pickle.PickleDataSet
+    filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/CS/09-backtesting/save_backtesting_temp.pickle
+    layer: backtesting
+
+# metricas de desempeño
+data_metrics_backtesting:
+    type: kedro.extras.datasets.pickle.PickleDataSet
+    filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/CS/09-backtesting/save_backtesting_temp.pickle
+    layer: backtesting
+
+# algoritmo ks y todo lo anterior
+insumo_modelo_360: # produccion
+    type: kedro.extras.datasets.pickle.PickleDataSet
+    filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/CS/09-backtesting/insumo_modelo_360_new_t3_202411.pickle
+    layer: backtesting
+    
+data_backtesting: # produccion
+    type: kedro.extras.datasets.pickle.PickleDataSet
+    filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/CS/09-backtesting/save_backtesting_new_t3_202411.pickle
+    layer: backtesting
+
+# ------ medicion y monitoreo
+data_backtesting_202410: 
+    type: kedro.extras.datasets.pickle.PickleDataSet
+    filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/CS/09-backtesting/save_backtesting_new_t3_202410.pickle
+    layer: backtesting
+    
+data_backtesting_202411: 
+    type: kedro.extras.datasets.pickle.PickleDataSet
+    filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/CS/09-backtesting/save_backtesting_new_t3_202411.pickle
+    layer: backtesting
+
+insumo_modelo_360_202411: 
+    type: kedro.extras.datasets.pickle.PickleDataSet
+    filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/CS/09-backtesting/insumo_modelo_360_new_t3_202411.pickle
+    layer: backtesting
+
+# ------ MODEL OUTPUT
+### Recuerde actualizar el conjunto de :homologate_region_model,feature_selected_list,info_save_select
+# input data
+df_input_mo:
+  type: pandas.ParquetDataSet
+  filepath: s3://data-bbog-dev-refined/estandarizado/feature-store/599-persona-natural/feature-store_599-persona-natural_master-table-599_cds_m202502/
+  layer: model_output
+
+# output
+base_calificada_nueva:
+  type: pandas.ParquetDataSet
+  filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/CS/08-model_output/base_calificada_nueva_202503.parquet
+  layer: model_output

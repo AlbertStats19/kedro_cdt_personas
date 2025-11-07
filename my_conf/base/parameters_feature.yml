@@ -1,0 +1,248 @@
+######### Parameters feature
+#########################
+
+## insumo para la funcion que crea variables
+crear_nuevas_variables: # metodos posibles: 'sumar','separar_string'
+    variable1:
+        nombre: mes
+        insumos:
+            # strings despues de la posicion 4
+            periodo: '>4'
+        metodo: 'separar_string'
+    variable2: 
+        nombre: AAAA
+        insumos:
+            # strings antes de la posicion 4
+            periodo: '<4' 
+        metodo: 'separar_string'
+    variable3:
+        nombre: sum_saldo_activos
+        insumos:
+            ah_sum_saldo_promedio: '+'
+            cc_sum_saldo_promedio: '+'
+            cdt_sum_monto_apertura: '+'
+            cdt_sum_valor_interes: '+'
+        metodo: 'sumar'
+    variable4:
+        nombre: sum_saldo_pasivos
+        insumos:
+            tc_sum_saldo_mean_2: '+'
+            ld_sum_saldo_promedio: '+'
+            lib_saldo_promedio: '+'
+            sus_saldo_promedio: '+'
+            veh_sum_saldo_promedio: '+'
+            viv_sum_saldo_promedio: '+'
+        metodo: 'sumar'
+    variable5:
+        nombre: delta_ah_sum_monto_trx_credito
+        insumos:
+            ah_sum_monto_trx_credito_mean_2: '+'
+            ah_sum_monto_trx_credito_mean_6: '-'
+        metodo: 'sumar'
+    variable6:
+        nombre: delta_ah_sum_monto_trx_debito
+        insumos:
+            ah_sum_monto_trx_debito_mean_2: '+'
+            ah_sum_monto_trx_debito_mean_6: '-'
+        metodo: 'sumar'
+    variable7:
+        nombre: delta_tc_sum_facturacion_total
+        insumos:
+            tc_sum_facturacion_total_valor_mean_2: '+'
+            tc_sum_facturacion_total_valor_mean_6: '-'
+        metodo: 'sumar'
+    variable8:
+        nombre: num_activos_prev
+        insumos:
+            ah_cant_prev: '+'
+            cc_cant_prev: '+'
+            cdt_cant_prev: '+'
+        metodo: 'sumar'
+    variable9:
+        nombre: num_pasivos_prev
+        insumos:
+            cs_cant_prev: '+'
+            fac_cant_prev: '+'
+            fid_cant_prev: '+'
+            lib_cant_prev: '+'
+            sus_cant_prev: '+'
+            veh_cant_prev: '+'
+            viv_cant_prev: '+'  
+            #ld_cant_prev: '+'
+        metodo: 'sumar'
+    variable10:
+        nombre: num_prod_activos
+        insumos:
+            ah_cant: '+'
+            cc_cant: '+'
+            cdt_cant: '+'
+        metodo: 'sumar'       
+    variable11:
+        nombre: num_prod_pasivos
+        insumos:
+            cs_cant: '+'
+            fac_cant: '+'
+            fid_cant: '+'
+            lib_cant: '+'
+            sus_cant: '+'
+            veh_cant: '+'
+            viv_cant: '+'  
+            #ld_cant: '+'
+        metodo: 'sumar'   
+
+## Metodo de homologracion de strings
+homologacion_x_variable: {
+    variable1: {
+        nombre: 'region', # nombre de la variable nueva (Si tiene el mismo nombre que insumo entonces seria un remplazo de valores)
+        insumo: 'departamento', # variable insumo para su creacion
+        fillna: "Other_Region", # Tratamiento de nulos
+        modo_homologacion: { # homogeneidad de caracteres
+            amazonas: "Region_Amazonica",
+            antioquia: "Region_Andina",
+            arauca: "Region_Orinoquia",
+            archipielago_de_san_andres_providencia_y: "Region_Caribe",
+            atlantico: "Region_Caribe",
+            bogota_d_c: "Region_Central",
+            bogota_d_c_: "Region_Central",
+            bolivar: "Region_Caribe",
+            boyaca: "Region_Andina",
+            caldas: "Region_Andina",
+            caqueta: "Region_Amazonica",
+            casanare: "Region_Orinoquia",
+            cauca: "Region_Pacifica",
+            cesar: "Region_Caribe",
+            choco: "Region_Pacifica",
+            cordoba: "Region_Caribe",
+            cundinamarca: "Region_Andina",
+            guainia: "Region_Amazonica",
+            guaviare: "Region_Amazonica",
+            huila: "Region_Andina",
+            la_guajira: "Region_Caribe",
+            magdalena: "Region_Caribe",
+            meta: "Region_Orinoquia",
+            narino: "Region_Pacifica",
+            norte_de_santander: "Region_Andina",
+            putumayo: "Region_Amazonica",
+            quindio: "Region_Andina",
+            risaralda: "Region_Andina",
+            santander: "Region_Andina",
+            sucre: "Region_Caribe",
+            tolima: "Region_Andina",
+            valle_del_cauca: "Region_Pacifica",
+            vaupes: "Region_Amazonica",
+            vichada: "Region_Orinoquia"
+                            }},
+     variable2: { 
+          nombre: 'ocupacion2', # nombre de la variable nueva (Si tiene el mismo nombre que insumo entonces seria un remplazo de valores)
+          insumo: 'ocupacion', # variable insumo para su creacion
+          fillna: 'None', # Tratamiento de nulos 
+          modo_homologacion: {
+              # homogeneidad de caracteres
+             pensionado: "no_relevante", #
+             empleado_privado: "empleado_privado", # no esta entre los top 25 mas relevenate pero puede ayudar a no perder informacion
+             fuerzas_militares: "no_relevante",
+             estudiante: "no_relevante",
+             independiente: "no_relevante",
+             empleado_publico: "empleado_publico", #
+             rentista_de_capital: "no_relevante",
+             profesional_independiente: "no_relevante",
+             desempleado: "no_relevante",
+             hogar: "no_relevante",
+             artista: "no_relevante",
+             empleado_entidad: "no_relevante",
+             policia_nacional: "no_relevante",
+             comerciante: "no_relevante",
+             politico: "no_relevante"
+                         }},
+    variable3: {
+          nombre: 'mar_status2', # nombre de la variable nueva (Si tiene el mismo nombre que insumo entonces seria un remplazo de valores)
+          insumo: 'mar_status', # variable insumo para su creacion
+          fillna: 'None', # Tratamiento de nulos 
+          modo_homologacion: { # homogeneidad de caracteres
+             s: "s", # no es relevante pero tiene un volumne alto
+             u: "u",
+             p: "no_relevante",
+             c: "c",
+             v: "no_relevante",
+             o: "no_relevante",
+             d: "no_relevante",
+             l: "no_relevante",
+                         }},
+    variable4: {
+          nombre: 'grupo_etario2', # nombre de la variable nueva (Si tiene el mismo nombre que insumo entonces seria un remplazo de valores)
+          insumo: 'grupo_etario', # variable insumo para su creacion
+          fillna: 'None', # Tratamiento de nulos 
+          modo_homologacion: { # homogeneidad de caracteres
+             _adulto: "adulto",
+             _joven: "no_relevante",
+             _persona_mayor: "no_relevante"
+                         }},
+    variable5: {
+        nombre: 'region3', # nombre de la variable nueva (Si tiene el mismo nombre que insumo entonces seria un remplazo de valores)
+        insumo: 'departamento', # variable insumo para su creacion
+        fillna: "None", # Tratamiento de nulos
+        modo_homologacion: { # homogeneidad de caracteres
+            amazonas: "no_relevante",
+            antioquia: "no_relevante",
+            arauca: "no_relevante",
+            archipielago_de_san_andres_providencia_y: "no_relevante",
+            atlantico: "no_relevante",
+            bogota_d_c: "bogota_d_c",
+            bogota_d_c_: "bogota_d_c",
+            bolivar: "no_relevante",
+            boyaca: "no_relevante",
+            caldas: "no_relevante",
+            caqueta: "no_relevante",
+            casanare: "no_relevante",
+            cauca: "no_relevante",
+            cesar: "no_relevante",
+            choco: "no_relevante",
+            cordoba: "no_relevante",
+            cundinamarca: "bogota_d_c",
+            guainia: "no_relevante",
+            guaviare: "no_relevante",
+            huila: "no_relevante",
+            la_guajira: "no_relevante",
+            magdalena: "no_relevante",
+            meta: "no_relevante",
+            narino: "no_relevante",
+            norte_de_santander: "no_relevante",
+            putumayo: "no_relevante",
+            quindio: "no_relevante",
+            risaralda: "no_relevante",
+            santander: "santander",
+            sucre: "no_relevante",
+            tolima: "no_relevante",
+            valle_del_cauca: "valle_del_cauca",
+            vaupes: "no_relevante",
+            vichada: "no_relevante"
+                            }}
+         }
+
+### eliminacion de columnas despues de crear las variables y homologar columnas
+cols_to_drop:
+  - aa_ciudad # no dice nada
+  - segmento_cliente # filtro de negocio si es solo uno puede que no diga nada
+  - mono_multi_prod # no dice nada
+  - seg_comercial # no dice nada
+#  - periodo # variable insumo antes
+#  - departamento # variable insumo antes
+#  - ocupacion # variable insumo antes
+#  - mar_status # variable insumo antes
+#  - grupo_etario # variable insumo antes
+
+### Metodo de seleccion de variables
+bootstrapping_feature: 
+    N_Iter: 7
+    by_order: True
+    test_size:  0.2
+
+### metodo de seleccion de variables de importancia
+requered_importances:
+        ignore_importance_model: False
+        n_top_select_importance_model: 25 # si es False escogera las  'n_top_select_importance_model' variables con mayor importancia
+        add_variables: # si es False escoge los 'n_top_select_importance_model' y luego añade estas
+                        - periodo
+        variables_select:  # si es True seleccionara estas variables
+                        #- ah_sum_monto_trx_debito_mean_6
+                        #- periodo

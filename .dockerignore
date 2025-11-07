@@ -1,0 +1,16 @@
+**/env
+**/.cache
+.git
+.gitignore
+.flake8
+.pylintrc
+# pyproject.toml
+.coverage
+.pre-commit-config.yaml
+**/__pycache__/
+
+# Exclude directories
+notebooks/
+data/
+logs/
+.ipynb_checkpoints/

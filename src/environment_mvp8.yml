@@ -1,0 +1,20 @@
+# generar el requirements.txt y colocar las versiones correspondientes a las librerias dependientes (No todas)
+name: proyecto_fabrica
+channels:
+    - conda-forge
+    - defaults
+dependencies: 
+    - python=3.9.19
+    - pandas=2.2.0
+    - numpy=1.26.0
+    - polars=0.20.25
+    - scikit-learn=1.4.0
+    - pyarrow=16.0.0
+    - imbalanced-learn=0.12.0
+    - scikit-posthocs=0.9.0
+    - xgboost=2.0.3
+    - s3fs=2024.6.0
+    - jupyter=1.0.0
+    - ipykernel=6.29.0
+    - kedro=0.18.14
+    - kedro-datasets=2.0.0

@@ -1,0 +1,31 @@
+target: '${runtime_params:target}' 
+
+id: 'hashvalue1' # tipo_id
+
+# se debe cambiar solo las dos primeras lineas por el producto 
+variable_apertura: '${runtime_params:variable_apertura}' 
+
+#### Parametro para definir cuanta base de datos calificar
+## Parameters model selection, efectividad en nodos != curva de backtesting
+n_obs_filter_select:  0.3
+## parameters model output
+n_obs_filter: 1
+
+fecha_ejecucion: '202504'
+
+#Variables de apertura data nueva y su homologo con la variable target
+todas_variables_apertura: 
+    fid_cant_aper_mes: fid_cant_ap_group3
+    leasing_cant_aper_mes: lea_target_ap_group3
+    tc_cant_aper_mes: tc_target_ap_group3
+    sus_cant_aper_mes: sus_target_ap_group3
+    cs_cant_aper_mes: cs_target_ap_group3
+    ld_cant_aper_mes: ld_target_ap_group3
+    ah_cant_aper_mes: ah_target_ap_group3
+    cc_cant_aper_mes: cc_target_ap_group3
+    viv_cant_aper_mes: viv_cant_ap_group3
+    cdt_cant_aper_mes: cdt_target_ap_group3
+    lib_cant_aper_mes: lib_target_ap_group3
+    veh_cant_aper_mes: veh_target_ap_group3
+    micro_cant_aper_mes: micr_cant_ap_mes3
+    fac_cant_aper_mes: fac_cant_ap_mes3

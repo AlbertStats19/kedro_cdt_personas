@@ -1,0 +1,109 @@
+1) CREAR REPO
+aws ecr create-repository --repository-name experimental-kedro-pr --region us-east-1 --image-scanning-configuration scanOnPush=true
+
+2) Autenticación Docker ↔ ECR (Login Succeeded)
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 503427799533.dkr.ecr.us-east-1.amazonaws.com
+
+3) DOCKER LOCAL
+docker build -t experimental-kedro-pr .
+
+4) DESPLIEGUE EN AWS / Publicación de la imagen Docker en ECR (push successful)
+a) docker tag experimental-kedro-pr:latest 503427799533.dkr.ecr.us-east-1.amazonaws.com/experimental-kedro-pr:latest
+b) docker push 503427799533.dkr.ecr.us-east-1.amazonaws.com/experimental-kedro-pr:latest
+
+
+#################################################
+#------------- Archivos S3 ---------------------#
+#################################################
+catalog.yml: 
+            homologate_region_model: s3://iris-mlops-kedro-data/data_mlops/04_feature/homologate_region_model.pickle
+            feature_selected_list: s3://iris-mlops-kedro-data/data_mlops/04_feature/feature_selected_list.parquet
+            info_save_select: s3://iris-mlops-kedro-data/data_mlops/07-model_selection/info_save_select.pickle
+
+            data_backtesting: s3://iris-mlops-kedro-data/data_mlops/09-backtesting/save_backtesting_${_fecha_ejecucion}_prueba1.pickle
+            insumo_modelo_360: s3://iris-mlops-kedro-data/data_mlops/09-backtesting/insumo_modelo_360_${_fecha_ejecucion}_prueba1.pickle
+
+            drift_alert: s3://iris-mlops-kedro-data/data_mlops/Stability/drift_alert_${_fecha_ejecucion}.pickle
+            sustainability_alert: s3://iris-mlops-kedro-data/data_mlops/Stability/sustainability_alert_${_fecha_ejecucion}.pickle
+
+
+parameters_backtesting.yml:
+            # Modo reentrenamiento
+            want: False
+            rutas_inputs:  [[1,'202505','s3://iris-mlops-kedro-data/data_mlops/refined_data/simulated/202505.parquet'], 
+               [2,'202506','s3://iris-mlops-kedro-data/data_mlops/refined_data/simulated/202506.parquet'],
+               [3,'202507','s3://iris-mlops-kedro-data/data_mlops/refined_data/simulated/202507.parquet']]
+
+            # Modo monitoreo:
+            want: True
+            rutas_inputs: [[1,'202506','s3://iris-mlops-kedro-data/data_mlops/08-model_output/base_calificada_nueva_202507.parquet'], 
+                    [2,'202505','s3://iris-mlops-kedro-data/data_mlops/08-model_output/base_calificada_nueva_202506.parquet'], 
+                    [3,'202504','s3://iris-mlops-kedro-data/data_mlops/08-model_output/base_calificada_nueva_202505.parquet']
+                   ]
+
+            # Contraste calificados
+            metodo: s3 # bigframes, s3
+                s3: 's3://iris-mlops-kedro-data/data_mlops/retail/202507.parquet'
+
+
+parameters_monitoreo.yml:
+            ruta_insumo_monitoreo: 's3://iris-mlops-kedro-data/data_mlops/09-backtesting/'
+            estructura_pdf:  
+                ruta_monitoreo: 's3://iris-mlops-kedro-data/data_mlops/Stability/' # ruta pdf
+
+##################################################
+#----------- Instancia IAM SAGEMAKER ------------#
+##################################################
+
+IAM: ROL --> SageMakerExecutionRole-personal
+     Políticas: AmazonElasticContainerRegistryPublicFullAccess
+                AmazonElasticContainerRegistryPublicPowerUser
+                AmazonElasticContainerRegistryPublicReadOnly
+                AmazonS3FullAccess
+                AmazonSageMakerFullAccess
+
+############################################
+#--------------- Deployment ---------------#
+#------------- Procesing JOB --------------#
+############################################
+SAGEMAKER AI -> Instancia de cuaderno -> JupyterLab
+                rol: SageMakerExecutionRole-personal
+
+--- raiz
+------ kedro_test
+---------run_pipeline.py:
+
+import sagemaker
+from sagemaker.processing import Processor
+
+# Sesión de SageMaker
+session = sagemaker.Session()
+role = "arn:aws:iam::503427799533:role/SageMakerExecutionRole-personal"
+
+# Imagen ECR personalizada
+image_uri = "503427799533.dkr.ecr.us-east-1.amazonaws.com/experimental-kedro-pr:latest"
+
+# Definición del procesamiento
+processor = Processor(
+    image_uri=image_uri,
+    role=role,
+    instance_count=1,
+    instance_type="ml.t3.medium",
+    base_job_name="kedro-experimental",
+    sagemaker_session=session
+)
+
+# Ejecutar el contenedor
+processor.run()
+print("✅ Ejecución del contenedor iniciada correctamente en SageMaker.")
+
+
+######################################################
+#---------------- Comandos terminal -----------------#
+######################################################
+
+find /home -name run_pipeline.py 2>/dev/null
+
+cd /home/ec2-user/SageMaker
+
+python run_pipeline.py

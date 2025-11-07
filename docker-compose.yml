@@ -1,0 +1,44 @@
+version: '2.1'
+
+services:
+
+  localstack: # REQUIRED
+    image: localstack/localstack:0.10.2
+    ports:
+      - "4567-4597:4567-4597"
+      - "${PORT_WEB_UI-8080}:${PORT_WEB_UI-8080}"
+    environment:
+      - SERVICES=${SERVICES- }
+      - DEBUG=${DEBUG- }
+      - DATA_DIR=/tmp/localstack/data
+      - PORT_WEB_UI=${PORT_WEB_UI- }
+      - LAMBDA_EXECUTOR=${LAMBDA_EXECUTOR- }
+      - KINESIS_ERROR_PROBABILITY=${KINESIS_ERROR_PROBABILITY- }
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - "localstack-vol:/tmp/localstack"
+
+  test: # REQUIRED
+    build: # To run pytest: docker-compose run test pytest
+      context: .
+      dockerfile: ./test/Dockerfile
+    environment:
+      - AWS_ACCESS_KEY_ID=foo # This is for localstack
+      - AWS_SECRET_ACCESS_KEY=foo
+      - AWS_DEFAULT_REGION=foo
+    depends_on:
+      - localstack # REQUIRED
+    links:
+      - localstack:localstack # REQUIRED
+    command: ["sh", "./test/build-test-env.sh"]
+
+
+  pipeline: # REQUIRED
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+volumes:
+    localstack-vol:
+    pip-vol:
+    netrc-vol:

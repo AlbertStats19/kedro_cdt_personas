@@ -1,0 +1,14 @@
+version: "1"
+
+publication:
+  type: 'ECR'
+
+  stacks:
+    - stack: 'dev'
+      targetRegistry: 'data-bbog-dev/fabrica'
+
+    - stack: 'stg'
+      targetRegistry: 'data-bbog-stg/fabrica'
+
+    - stack: 'pro'
+      targetRegistry: 'data-bbog-pro/fabrica'

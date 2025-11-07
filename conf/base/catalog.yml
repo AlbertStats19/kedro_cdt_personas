@@ -1,0 +1,358 @@
+## Data Catalog para FID
+
+#--------CAPA FEATURE
+homologate_region_model: # produccion
+  type: pickle.PickleDataset
+  ### visualizacion de desarrollo
+  #filepath: s3://data-bbog-dev-resources/casos-uso/fabrica/${runtime_params:product}/04-feature/homologate_region_model.pickle
+  ### visual previa a la productiva en model output
+  # filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica/${runtime_params:product}/04-feature/homologate_region_model.pickle
+  # filepath: 01 - s3/04_feature/homologate_region_model.pickle
+  filepath: s3://iris-mlops-kedro-data/data_mlops/04_feature/homologate_region_model.pickle
+  #layer: feature
+
+feature_selected_list: # produccion
+  type: pandas.ParquetDataset
+  ### visualizacion de desarrollo
+  #filepath: s3://data-bbog-dev-resources/casos-uso/fabrica/${runtime_params:product}/04-feature/feature_selected_list.parquet
+  ### visual previa a la productiva en model output
+  # filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica/${runtime_params:product}/04-feature/feature_selected_list.parquet
+  # filepath: 01 - s3/04_feature/feature_selected_list.parquet
+  filepath: s3://iris-mlops-kedro-data/data_mlops/04_feature/feature_selected_list.parquet
+  #layer: feature
+
+# ------CAPA MODEL SELECTION:
+info_save_select: # modelo produccion
+  type: pickle.PickleDataset
+  ### visualizacion de desarrollo
+  #filepath: s3://data-bbog-dev-resources/casos-uso/fabrica/${runtime_params:product}/07-model_selection/info_save_select.pickle
+  ### visual previa a la productiva en model output
+  # filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica/${runtime_params:product}/07-model_selection/info_save_select.pickle
+  filepath: 01 - s3/07_model_selection/info_save_select.pickle
+  filepath: s3://iris-mlops-kedro-data/data_mlops/07-model_selection/info_save_select.pickle
+  #layer: model_selection
+
+# ------ MODEL OUTPUT
+### Recuerde actualizar el conjunto de :homologate_region_model,feature_selected_list,info_save_select
+# input data
+# df_input_mo:
+#   type: pandas.ParquetDataset
+#   ### visual productiva con Modelo 360
+#   #filepath: s3://data-bbog-dev-refined/estandarizado/feature-store/599-persona-natural/feature-store_599-persona-natural_master-table-599_cds_m${previous_month:'${_fecha_ejecucion}'}/
+#   #load_args: ${_f599_load_args}
+#   ### visual previa a la productiva en model output
+#   filepath: s3://data-bbog-dev-refined/estandarizado/feature-store/599-persona-natural/feature-store_599-persona-natural_master-table-599_cds_m${previous_month:'${runtime_params:fecha_ejecucion}'}/
+
+# output
+base_calificada_nueva:
+  type: pandas.ParquetDataset
+  # filepath: s3://data-bbog-dev-output/cds/fabrica-personas/08-model_output/${runtime_params:product}/base_calificada_${_fecha_ejecucion}.parquet
+  filepath: 08-model_output/${runtime_params:product}/base_calificada_${_fecha_ejecucion}.parquet
+
+
+_fecha_ejecucion: "${format_execution_date: ${runtime_params:fecha_ejecucion}}"
+
+# ----- BACKTESTING
+data_backtesting: 
+    type: pickle.PickleDataset
+    # filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/${runtime_params:product}/09-backtesting/save_backtesting_${_fecha_ejecucion}_prueba1.pickle
+    # filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/${runtime_params:product}/09-backtesting/save_backtesting_${_fecha_ejecucion}_prueba1.pickle
+    # filepath: 01 - s3/09-backtesting/save_backtesting_${_fecha_ejecucion}_prueba1.pickle
+    filepath: s3://iris-mlops-kedro-data/data_mlops/09-backtesting/save_backtesting_${_fecha_ejecucion}_prueba1.pickle
+    #layer: backtesting
+
+insumo_modelo_360: 
+    type: pickle.PickleDataset
+    # filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica-personas/${runtime_params:product}/09-backtesting/insumo_modelo_360_${_fecha_ejecucion}_prueba1.pickle
+    # filepath: 01 - s3/09-backtesting/insumo_modelo_360_${_fecha_ejecucion}_prueba1.pickle
+    filepath: s3://iris-mlops-kedro-data/data_mlops/09-backtesting/insumo_modelo_360_${_fecha_ejecucion}_prueba1.pickle
+    #layer: backtesting
+
+# =====================
+# CAPA MONITOREO (SALIDAS DE ALERTAS)
+# =====================
+
+drift_alert:
+  type: pickle.PickleDataset
+  # filepath: 01 - s3/Estabilidad/drift_alert_${_fecha_ejecucion}.pickle
+  filepath: s3://iris-mlops-kedro-data/data_mlops/Stability/drift_alert_${_fecha_ejecucion}.pickle
+  versioned: false
+
+sustainability_alert:
+  type: pickle.PickleDataset
+  # filepath: 01 - s3/Estabilidad/sustainability_alert_${_fecha_ejecucion}.pickle
+  filepath: s3://iris-mlops-kedro-data/data_mlops/Stability/sustainability_alert_${_fecha_ejecucion}.pickle
+  versioned: false
+
+# ----- OTROS PARAMETROS
+_f599_load_args:
+  use_threads: true
+  columns:
+    - hashvalue1
+    - periodo
+    - generacion
+    - estrato
+    - departamento
+    - ocupacion
+    - perfil_riesgo
+    - mcro_sum_numero_cuotas_total
+    - aa_ciudad
+    - mar_status
+    - antiguedad_meses
+    - segmento_cliente
+    - grupo_etario
+    - edad_anios
+    - mono_multi_prod
+    - nivel_educativo
+    - seg_comercial
+    - fac_cant
+    - fac_sum_numero_cuotas_pagadas
+    - fac_prom_plazo
+    - fac_cant_prev
+    - fac_cant_aper_mes
+    - fac_sum_numero_cuotas_total
+    - fac_sum_pago_acumulado
+    - fac_sum_saldo_corte
+    - fac_sum_intereses
+    - fac_sum_saldo_promedio
+    - fac_sum_cuota_pactada
+    - fac_sum_monto
+    - fac_sum_pago_mes
+    - ld_sum_numero_cuotas_total
+    - ld_prom_plazo
+    - ld_sum_pago_mes
+    - ld_sum_cuota_pactada
+    - ld_sum_intereses
+    - ld_sum_pago_acumulado
+    - ld_cant_aper_mes
+    - ld_sum_monto
+    - ld_sum_saldo_promedio
+    - ld_cant_prev
+    - ld_cant
+    - ld_sum_numero_cuotas_pagadas
+    - ld_sum_saldo_corte
+    - ord_sum_numero_cuotas_total
+    - ord_sum_monto
+    - ord_sum_saldo_corte
+    - ord_sum_saldo_promedio
+    - ord_sum_numero_cuotas_pagadas
+    - ord_prom_plazo
+    - ord_sum_pago_mes
+    - ord_sum_cuota_pactada
+    - ord_cant_prev
+    - ord_sum_pago_acumulado
+    - ord_sum_intereses
+    - ord_cant
+    - leasing_sum_cuota_pactada
+    - leasing_cant_prev
+    - leasing_sum_saldo_promedio
+    - leasing_sum_monto
+    - leasing_sum_pago_mes
+    - leasing_sum_pago_acumulado
+    - leasing_cant
+    - leasing_sum_intereses
+    - leasing_prom_plazo
+    - leasing_sum_numero_cuotas_pagadas
+    - leasing_cant_aper_mes
+    - leasing_sum_numero_cuotas_total
+    - leasing_sum_saldo_corte
+    - ah_sum_monto_trx_debito_mean_2
+    - ah_sum_monto_trx_credito_std_3
+    - ah_sum_monto_trx_debito
+    - ah_sum_saldo_promedio_mean_3
+    - ah_sum_monto_trx_credito_std_6
+    - ah_sum_saldo_promedio_std_2
+    - ah_cant_aper_mes
+    - ah_sum_monto_trx_debito_std_6
+    - ah_sum_saldo_promedio
+    - ah_sum_cantidad_trx_credito
+    - ah_cant_prev
+    - ah_sum_monto_trx_debito_mean_6
+    - ah_sum_monto_trx_debito_mean_3
+    - ah_sum_monto_trx_debito_std_2
+    - ah_cant
+    - ah_sum_saldo_promedio_mean_6
+    - ah_sum_monto_trx_debito_std_3
+    - ah_sum_monto_trx_credito_mean_3
+    - ah_sum_monto_trx_credito_mean_2
+    - ah_sum_monto_trx_credito
+    - ah_sum_monto_trx_credito_std_2
+    - ah_sum_saldo_promedio_mean_2
+    - ah_sum_saldo_promedio_std_3
+    - ah_sum_saldo_promedio_std_6
+    - ah_sum_monto_trx_credito_mean_6
+    - ah_sum_saldo_corte
+    - ah_sum_cantidad_trx_debito
+    - vlr_pasivos
+    - vlr_ing_bru_mes_std_6
+    - vlr_activos
+    - vlr_ing_bru_mes_std_2
+    - vlr_egreso_mes_mean_3
+    - vlr_ing_bru_mes
+    - vlr_ing_bru_mes_mean_2
+    - vlr_ing_bru_mes_std_3
+    - vlr_egreso_mes
+    - vlr_egreso_mes_std_6
+    - vlr_egreso_mes_std_3
+    - vlr_egreso_mes_mean_6
+    - vlr_ing_bru_mes_mean_3
+    - vlr_egreso_mes_std_2
+    - vlr_ing_bru_mes_mean_6
+    - vlr_egreso_mes_mean_2
+    - micro_sum_monto
+    - micro_sum_cuota_pactada
+    - micro_cant_aper_mes
+    - micro_sum_saldo_corte
+    - micro_cant
+    - micro_sum_pago_mes
+    - micro_sum_intereses
+    - micro_sum_saldo_promedio
+    - micro_sum_numero_cuotas_pagadas
+    - micro_cant_prev
+    - micro_sum_pago_acumulado
+    - micro_prom_plazo
+    - tc_sum_facturacion_total_valor_mean_6
+    - tc_sum_pagos_total_valor_mean_6
+    - tc_sum_saldo_mean_6
+    - tc_sum_pago_minimo
+    - tc_cant_prev
+    - tc_sum_saldo_std_3
+    - tc_cant_aper_mes
+    - tc_sum_cupo_disponible_std_6
+    - tc_sum_saldo
+    - tc_sum_saldo_std_6
+    - tc_sum_saldo_std_2
+    - tc_sum_pagos_total_valor_std_2
+    - tc_sum_cupo_disponible_std_2
+    - tc_sum_pagos_total_valor
+    - tc_sum_facturacion_total_valor
+    - tc_sum_facturacion_total_valor_mean_3
+    - tc_sum_saldo_mean_3
+    - tc_sum_cupo_disponible_std_3
+    - tc_sum_facturacion_total_cant
+    - tc_sum_facturacion_total_valor_mean_2
+    - tc_sum_pagos_total_valor_mean_2
+    - tc_sum_pagos_total_valor_std_3
+    - tc_sum_cupo_disponible_mean_2
+    - tc_sum_facturacion_total_valor_std_2
+    - tc_sum_facturacion_total_valor_std_3
+    - tc_cant
+    - tc_sum_pagos_total_valor_std_6
+    - tc_sum_cupo_disponible
+    - tc_sum_cupo_disponible_mean_6
+    - tc_sum_pagos_total_valor_mean_3
+    - tc_sum_intereses
+    - tc_sum_saldo_mean_2
+    - tc_sum_pago_real
+    - tc_sum_cupo_disponible_mean_3
+    - tc_cant_mora
+    - tc_sum_facturacion_total_valor_std_6
+    - tc_sum_pagos_total_cant
+    - cc_cant_prev
+    - cc_sum_cantidad_trx_credito
+    - cc_cant
+    - cc_sum_monto_trx_credito
+    - cc_cant_aper_mes
+    - cc_sum_saldo_corte
+    - cc_sum_intereses
+    - cc_sum_saldo_promedio
+    - cc_sum_cantidad_trx_debito
+    - cc_sum_monto_trx_debito
+    - viv_cant_prev
+    - viv_prom_plazo
+    - viv_sum_pago_mes
+    - viv_sum_cuota_pactada
+    - viv_cant
+    - viv_sum_pago_acumulado
+    - viv_sum_numero_cuotas_pagadas
+    - viv_sum_numero_cuotas_total
+    - viv_cant_aper_mes
+    - viv_sum_intereses
+    - viv_sum_monto
+    - viv_sum_saldo_corte
+    - viv_sum_saldo_promedio
+    - otras_ord_sum_monto
+    - otras_ord_sum_numero_cuotas_total
+    - otras_ord_sum_saldo_corte
+    - otras_ord_sum_saldo_promedio
+    - otras_ord_sum_pago_acumulado
+    - otras_ord_sum_cuota_pactada
+    - otras_ord_sum_intereses
+    - otras_ord_sum_numero_cuotas_pagadas
+    - otras_ord_cant_prev
+    - otras_ord_cant
+    - otras_ord_sum_pago_mes
+    - otras_ord_prom_plazo
+    - sus_sum_monto
+    - sus_cant_prev
+    - sus_sum_pago_acumulado
+    - sus_saldo_corte
+    - sus_sum_pago_mes
+    - sus_cant
+    - sus_saldo_promedio
+    - sus_cant_aper_mes
+    - sus_prom_plazo
+    - sus_numero_cuotas_total
+    - sus_numero_cuotas_pagadas
+    - sus_sum_intereses
+    - sus_sum_cuota_pactada
+    - flujo_neto_ca_std_3
+    - flujo_neto_ca_std_2
+    - flujo_neto_ca_mean_6
+    - flujo_neto_ca_std_6
+    - flujo_neto_ca_mean_3
+    - flujo_neto_ca_mean_2
+    - flujo_neto_ca
+    - cdt_sum_valor_interes
+    - cdt_cant_prev
+    - cdt_sum_monto_apertura
+    - cdt_prom_plazo_actual
+    - cdt_prom_plazo_total_meses
+    - cdt_cant
+    - cdt_cant_aper_mes
+    - ratio_deuda_ingresos_mean_3
+    - ratio_deuda_ingresos
+    - ratio_deuda_ingresos_std_6
+    - ratio_deuda_ingresos_std_3
+    - ratio_deuda_ingresos_mean_6
+    - ratio_deuda_ingresos_std_2
+    - ratio_deuda_ingresos_mean_2
+    - cs_cant_aper_mes
+    - cs_sum_saldo
+    - cs_cant_mora
+    - cs_sum_monto_cupo_rotativo
+    - cs_sum_intereses
+    - cs_cant_prev
+    - cs_sum_pago_real
+    - cs_cant
+    - cs_sum_cupo_disponible
+    - lib_sum_monto
+    - lib_numero_cuotas_total
+    - lib_sum_intereses
+    - lib_numero_cuotas_pagadas
+    - lib_saldo_promedio
+    - lib_saldo_corte
+    - lib_cant
+    - lib_sum_pago_mes
+    - lib_cant_aper_mes
+    - lib_prom_plazo
+    - lib_sum_cuota_pactada
+    - lib_sum_pago_acumulado
+    - lib_cant_prev
+    - veh_sum_saldo_corte
+    - veh_sum_pago_mes
+    - veh_sum_monto
+    - veh_sum_pago_acumulado
+    - veh_sum_intereses
+    - veh_cant
+    - veh_cant_prev
+    - veh_sum_saldo_promedio
+    - veh_prom_plazo
+    - veh_sum_numero_cuotas_pagadas
+    - veh_sum_numero_cuotas_total
+    - veh_cant_aper_mes
+    - veh_sum_cuota_pactada
+    - fid_cant_prev
+    - fid_cant
+    - fid_sum_encargo
+    - fid_cant_aper_mes
