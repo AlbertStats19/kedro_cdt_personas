@@ -11,6 +11,16 @@ docker build -t oficial-kedro-pr .
 a) docker tag oficial-kedro-pr:latest 503427799533.dkr.ecr.us-east-1.amazonaws.com/oficial-kedro-pr:latest
 b) docker push 503427799533.dkr.ecr.us-east-1.amazonaws.com/oficial-kedro-pr:latest
 
+#################################################
+#---------- Reconstruir imagen -----------------#
+#################################################
+# local
+docker build -t oficial-kedro-pr .
+
+# nube
+docker tag oficial-kedro-pr:latest 503427799533.dkr.ecr.us-east-1.amazonaws.com/oficial-kedro-pr:latest
+docker push 503427799533.dkr.ecr.us-east-1.amazonaws.com/oficial-kedro-pr:latest
+
 
 #################################################
 #------------- Archivos S3 ---------------------#
