@@ -1,9 +1,0 @@
-## Parameters primary
-
-#filter_business_data_pd
-filter_business:
-    edad_anios:
-        - 18
-        - 70
-    #ratio_deuda_ingresos: ">0"
-
