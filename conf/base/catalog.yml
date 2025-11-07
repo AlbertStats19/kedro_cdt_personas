@@ -28,7 +28,7 @@ info_save_select: # modelo produccion
   #filepath: s3://data-bbog-dev-resources/casos-uso/fabrica/${runtime_params:product}/07-model_selection/info_save_select.pickle
   ### visual previa a la productiva en model output
   # filepath: s3://data-bbog-dev-sandbox-entity/casos-uso/fabrica/${runtime_params:product}/07-model_selection/info_save_select.pickle
-  filepath: 01 - s3/07_model_selection/info_save_select.pickle
+  # filepath: 01 - s3/07_model_selection/info_save_select.pickle
   filepath: s3://iris-mlops-kedro-data/data_mlops/07-model_selection/info_save_select.pickle
   #layer: model_selection
 
