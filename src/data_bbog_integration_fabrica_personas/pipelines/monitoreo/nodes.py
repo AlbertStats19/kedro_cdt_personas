@@ -7,6 +7,9 @@ import logging
 from io import StringIO
 import logging
 
+import os
+import boto3
+
 from IPython.display import display
 import scipy.interpolate as spi
 import matplotlib.pyplot as plt
@@ -970,141 +973,43 @@ def dividir_texto(texto, max_chars=80):
     return lineas
 
 ## Pipeline de generacion de reporte
-def generar_reporte_pdf(pdf_info,params):
-    """
-        Funcion principal para transformar el diccionario "pdf_info" en un 
-        en un pdf automatico y lo guarda en la ruta de los parametros
-    
-    Parameters
-    ----------
-        pdf_info:
-            dict que contiene las imagenes y mensajes que iran al reporte del pdf
-        params:
-            Dict de parametros
-
-    Returns
-    -------
-        None
-    """
-    # parametros
+def generar_reporte_pdf(pdf_info, params):
     estructura_pdf = params['estructura_pdf']
-
-    ruta_base = estructura_pdf['ruta_monitoreo']
+    ruta_base_s3 = estructura_pdf['ruta_monitoreo']
     nombre_pdf = estructura_pdf['nombre_pdf']
-    start_text_cm = estructura_pdf['start_text_cm']
-    margen_sup_inf_cm = estructura_pdf['margen_sup_inf_cm']
-    renglon_cm = estructura_pdf['renglon_cm']
-    margen_izq_cm = estructura_pdf['margen_izq_cm']
-    width_graph_cm = estructura_pdf['width_graph_cm']
-    height_graph_cm = estructura_pdf['height_graph_cm']
-    y_graph_cm = estructura_pdf['y_graph_cm']
-    margen_izq_graph_cm = estructura_pdf['margen_izq_graph_cm']
-    # Crear el PDF
-    pdf_path = f'{ruta_base}/{nombre_pdf}'
-    # pasand los parametros del pdf en centimetros
-    start_text = start_text_cm * cm
-    margen_inferior = margen_sup_inf_cm * cm
-    margen_superior = margen_sup_inf_cm * cm
-    renglon = renglon_cm * cm
-    margen_izq = margen_izq_cm * cm
-    margen_izq_graph = margen_izq_graph_cm * cm
-    y_graph = y_graph_cm * cm
-    try:
-        width_graph = width_graph_cm * cm
-    except:
-        width_graph = None
-    try:
-        height_graph = height_graph_cm * cm
-    except:
-        height_graph = None
-    # Crear canvas
-    c = canvas.Canvas(pdf_path, pagesize=A4)
-    width, height = A4
-    
-    # estilo de los dataframes
-    style = TableStyle([
-        ('BACKGROUND', (0,0), (-1,0), colors.red),
-        ('TEXTCOLOR', (0,0), (-1,0), colors.whitesmoke),
-        ('GRID', (0,0), (-1,-1), 1, colors.black),
-        ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
-        ('ALIGN', (0,0), (-1,-1), 'CENTER'),
-    ])
-    
-    # extrayendo la estructura del archivo
-    for i in list(pdf_info.keys()):
-        if i != 'parte':
-            # Página 1: Texto introductorio
-            y = start_text
-            titulo = f"INFORME DE METRICAS"
-            c.setFont("Helvetica", 14)
-            c.drawString(margen_izq, y, titulo)
-            y -= renglon
-            titulo = f"{i.upper()}"
-            c.setFont("Helvetica", 13)
-            c.drawString(margen_izq, y, titulo)
-            # texto
-            y = start_text - margen_superior
-            texto = pdf_info[i]['msj']
-            tickets_df = pdf_info[i]['tickets_df']
-            start = 1
-            for t, text in enumerate(texto, start=start):
-                if isinstance(text, str):
-                    for linea in dividir_texto(text):
-                        c.setFont("Helvetica", 12)
-                        c.drawString(margen_izq, y, linea)
-                        y -= renglon
-                        if y <= margen_inferior:
-                            c.showPage()      # Cambia de página
-                            y = start_text - margen_superior # Reinicia la posición vertical para la nueva página
-    
-                elif isinstance(text, pd.DataFrame):
-                    y -= renglon
-                    ix_name = text.index.name
-                    if ix_name == None:
-                        ix_name = 'Index'
-                    co_name = text.columns.name
-                    text.index.name = str(ix_name)+ "\\" +str(co_name)
-                    text = text.round(2).reset_index()
-                    # ticket_t_df = tickets_df[t-start]
-                    # Convertir DataFrame a lista para Table (encabezado + filas)
-                    text_df = [text.columns.to_list()] + text.values.tolist()
-                    
-                    # Crear tabla
-                    table = Table(text_df)
-                    # adaptar el diseño del cuadro
-                    table.setStyle(style)
-                    
-                    # Preparar tabla al pdf (wrapOn) para que calcule tamaños
-                    table.wrapOn(c, width - 2* margen_izq, height)
-                    # Altura de tabla
-                    table_height = table._height
-                    # Dibujar tabla en el canvas en la posición (x, y)
-                    # Nota: La coordenada Y se mide desde abajo, así que pon un valor que permita ver la tabla
-                    y -= table_height - renglon
-                    
-                    if y <= margen_inferior:
-                        # la tabla no alcanza en la hoja...
-                        print(text)
-                        c.showPage()      # Cambia de página
-                        y = start_text - margen_superior  # Reinicia la posición vertical para la nueva página
-                        # y le coloco el nuevo espaciado de longitud de la tabla
-                        y -= table_height - renglon
-                    table.drawOn(c, margen_izq, y)
-                    y -= table_height - renglon
-                    y -= renglon
-            ## finalizo los mensajes por ende existe cambio de pagina
-            c.showPage()
-            # Guardando los gráficos en el pdf e individualemnte
-            figuras = pdf_info[i]['figuras']
-            for t,figura in enumerate(figuras,start = 1):
-                ruta_img = f'{ruta_base}/imagen_{i}{t}.png'
-                figura.savefig(ruta_img)
-                # grafico en pdf
-                c.drawImage(ruta_img, margen_izq_graph, y_graph, width=width_graph, height=height_graph, preserveAspectRatio=True)
-                c.showPage()
-    
-    # Guardar el PDF 
-    logger.info(f"PDF generado en: {pdf_path}")
+
+    # === Ruta temporal local donde el contenedor puede escribir ===
+    ruta_local_tmp = "/opt/ml/processing/output/monitoring"
+    os.makedirs(ruta_local_tmp, exist_ok=True)
+
+    pdf_path_local = os.path.join(ruta_local_tmp, nombre_pdf)
+    c = canvas.Canvas(pdf_path_local, pagesize=A4)
+
+    # ... 👈 (mantén todo el contenido original de la función, solo cambia el destino de guardado)
+
+    # Guardar el PDF
     c.save()
-    # return None
+    print(f"✅ PDF local generado: {pdf_path_local}")
+
+    # === Subir al bucket S3 destino ===
+    s3 = boto3.client("s3")
+    bucket_name = ruta_base_s3.split("/")[2]
+    prefix = "/".join(ruta_base_s3.split("/")[3:])
+
+    # Subir el PDF
+    s3.upload_file(pdf_path_local, bucket_name, f"{prefix}/{nombre_pdf}")
+    print(f"📤 PDF subido a S3: s3://{bucket_name}/{prefix}/{nombre_pdf}")
+
+    # Subir todas las imágenes generadas
+    for i in list(pdf_info.keys()):
+        if i != "parte":
+            figuras = pdf_info[i]['figuras']
+            for t, figura in enumerate(figuras, start=1):
+                filename = f"imagen_{i.replace(' ', '_')}{t}.png"
+                img_local_path = os.path.join(ruta_local_tmp, filename)
+                figura.savefig(img_local_path)
+                s3.upload_file(img_local_path, bucket_name, f"{prefix}/{filename}")
+                print(f"📤 Imagen subida a S3: s3://{bucket_name}/{prefix}/{filename}")
+
+    print("✅ Todas las imágenes y PDF subidas correctamente.")
     return ''
